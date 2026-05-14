@@ -39,6 +39,15 @@ final class ServiceProviderTest extends TestCase
         $this->assertSame(3, $this->app['config']->get('nomba.retry_attempts'));
     }
 
+    public function test_webhook_route_is_registered_by_default(): void
+    {
+        $this->assertNotNull(
+            app('router')->getRoutes()->getByAction(
+                'Nomba\Laravel\Http\Controllers\WebhookController@handle'
+            )
+        );
+    }
+
     public function test_resolved_client_exposes_resources(): void
     {
         $nomba = $this->app->make(NombaClient::class);

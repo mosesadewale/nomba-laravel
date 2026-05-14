@@ -39,6 +39,10 @@ class NombaServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if (config('nomba.register_webhook_route', true)) {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/webhooks.php');
+        }
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/nomba.php' => config_path('nomba.php'),

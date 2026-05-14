@@ -30,8 +30,9 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'webhook_secret' => env('NOMBA_WEBHOOK_SECRET', ''),
-    'webhook_path'   => env('NOMBA_WEBHOOK_PATH', 'nomba/webhook'),
+    'webhook_secret'         => env('NOMBA_WEBHOOK_SECRET', ''),
+    'webhook_path'           => env('NOMBA_WEBHOOK_PATH', 'nomba/webhook'),
+    'register_webhook_route' => env('NOMBA_REGISTER_ROUTE', true),
 
     /*
     |--------------------------------------------------------------------------
