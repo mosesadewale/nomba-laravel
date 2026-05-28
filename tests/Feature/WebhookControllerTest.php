@@ -35,6 +35,10 @@ final class WebhookControllerTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     * @return TestResponse<\Illuminate\Http\Response>
+     */
     private function postWebhook(array $payload, string $timestamp = '2026-01-01T00:00:00Z'): TestResponse
     {
         $signString = implode(':', [
@@ -134,18 +138,10 @@ final class WebhookControllerTest extends TestCase
         $body      = '{"event_type":"payment_success","data":{"merchant":{"userId":"u","walletId":"w"},"transaction":{"transactionId":"t","type":"x","time":"2026-01-01T00:00:00Z","responseCode":""}}}';
         $timestamp = '2026-01-01T00:00:00Z';
 
-        // Build a valid signature for this body so the middleware passes.
-        $decoded    = json_decode($body, true);
+        // Build a valid signature matching the known literal body values.
+        // requestId is intentionally absent — sign string uses '' in that slot.
         $signString = implode(':', [
-            $decoded['event_type']                           ?? '',
-            $decoded['requestId']                            ?? '',
-            $decoded['data']['merchant']['userId']           ?? '',
-            $decoded['data']['merchant']['walletId']         ?? '',
-            $decoded['data']['transaction']['transactionId'] ?? '',
-            $decoded['data']['transaction']['type']          ?? '',
-            $decoded['data']['transaction']['time']          ?? '',
-            $decoded['data']['transaction']['responseCode']  ?? '',
-            $timestamp,
+            'payment_success', '', 'u', 'w', 't', 'x', '2026-01-01T00:00:00Z', '', $timestamp,
         ]);
         $signature = base64_encode(hash_hmac('sha256', $signString, self::SECRET, true));
 

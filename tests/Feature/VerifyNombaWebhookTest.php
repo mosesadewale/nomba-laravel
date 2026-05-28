@@ -34,6 +34,9 @@ final class VerifyNombaWebhookTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     private function buildSignature(array $payload, string $timestamp): string
     {
         $signString = implode(':', [
@@ -62,7 +65,10 @@ final class VerifyNombaWebhookTest extends TestCase
 
     private function middleware(): VerifyNombaWebhook
     {
-        return new VerifyNombaWebhook($this->app->make(NombaClient::class));
+        $app = $this->app;
+        $this->assertNotNull($app);
+
+        return new VerifyNombaWebhook($app->make(NombaClient::class));
     }
 
     public function test_valid_signature_passes_through(): void

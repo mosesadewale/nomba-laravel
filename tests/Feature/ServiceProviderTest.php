@@ -17,8 +17,10 @@ final class ServiceProviderTest extends TestCase
 {
     public function test_nomba_client_is_bound_as_singleton(): void
     {
-        $a = $this->app->make(NombaClient::class);
-        $b = $this->app->make(NombaClient::class);
+        $app = $this->app;
+        $this->assertNotNull($app);
+        $a = $app->make(NombaClient::class);
+        $b = $app->make(NombaClient::class);
 
         $this->assertInstanceOf(NombaClient::class, $a);
         $this->assertSame($a, $b);
@@ -26,17 +28,21 @@ final class ServiceProviderTest extends TestCase
 
     public function test_interface_resolves_to_nomba_client(): void
     {
+        $app = $this->app;
+        $this->assertNotNull($app);
         $this->assertInstanceOf(
             NombaClient::class,
-            $this->app->make(NombaClientInterface::class),
+            $app->make(NombaClientInterface::class),
         );
     }
 
     public function test_config_is_merged_with_defaults(): void
     {
-        $this->assertSame('sandbox', $this->app['config']->get('nomba.environment'));
-        $this->assertSame(30.0, $this->app['config']->get('nomba.timeout'));
-        $this->assertSame(3, $this->app['config']->get('nomba.retry_attempts'));
+        $app = $this->app;
+        $this->assertNotNull($app);
+        $this->assertSame('sandbox', $app['config']->get('nomba.environment'));
+        $this->assertSame(30.0, $app['config']->get('nomba.timeout'));
+        $this->assertSame(3, $app['config']->get('nomba.retry_attempts'));
     }
 
     public function test_webhook_route_is_registered_by_default(): void
@@ -50,7 +56,9 @@ final class ServiceProviderTest extends TestCase
 
     public function test_resolved_client_exposes_resources(): void
     {
-        $nomba = $this->app->make(NombaClient::class);
+        $app = $this->app;
+        $this->assertNotNull($app);
+        $nomba = $app->make(NombaClient::class);
 
         $this->assertInstanceOf(CheckoutResource::class, $nomba->checkout());
         $this->assertInstanceOf(VirtualAccountResource::class, $nomba->virtualAccounts());
